@@ -30,10 +30,19 @@ if ! [ -f "$NGINX_REAL_SITE_PATH" ]; then
 fi
 printf "nginx site file looks ok.\n\n"
 
+printf "Validating main db file...\n\n"
+if ! [ -f "$MAIN_DB_FILE_PATH" ]; then
+  create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_MAIN_DB_CONTENT" "$MAIN_DB_FILE_PATH"
+  printf "main db file validated.\n\n"
+fi
+printf "Validating test db file...\n\n"
+if ! [ -f "$TEST_DB_FILE_PATH" ]; then
+  create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_TEST_DB_CONTENT" "$TEST_DB_FILE_PATH"
+  printf "test db file validated.\n\n"
+fi
+printf "db files looks ok.\n\n"
 
 if [ "$FIRST_ARG" = "build" ]; then
-  create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_MAIN_DB_CONTENT" "$MAIN_DB_FILE_PATH"
-  create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_TEST_DB_CONTENT" "$TEST_DB_FILE_PATH"
   docker_down
   docker_build
   docker_up

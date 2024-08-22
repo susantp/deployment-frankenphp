@@ -48,7 +48,7 @@ services:
     image: "${PROJECT_NAME}/mysql:1.0"
     build: ./mysql
     volumes:
-      - ./data/mysql:/var/lib/mysql
+      - ./mysql/data/project_db:/var/lib/mysql
       - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
@@ -64,7 +64,7 @@ services:
     image: "${PROJECT_NAME}/test_db:1.0"
     build: ./mysql
     volumes:
-      - ./data/test_db:/var/lib/mysql
+      - ./mysql/data/test_db:/var/lib/mysql
       - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
     ports:
       - "3307:3306"
