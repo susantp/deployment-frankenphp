@@ -1,0 +1,33 @@
+{
+    debug
+    frankenphp
+}
+
+(local-settings) {
+    route {
+        root * /var/www/public
+        encode zstd br gzip
+        php_server
+    }
+}
+
+(subdomain-settings) {
+    @matchHost {
+        header_regexp subdomainCapture Host ^([a-z]+)-([a-z]{2})\.techbizz\.local$
+    }
+
+    handle @matchHost {
+        request_header +ENV {re.subdomainCapture.1}
+        request_header +COUNTRY {re.subdomainCapture.2}
+    }
+}
+
+# Wildcard domain block to catch all subdomains and apply the logic
+*.techbizz.local {
+    import subdomain-settings
+    log {
+        output stdout
+        format json
+    }
+    import local-settings
+}

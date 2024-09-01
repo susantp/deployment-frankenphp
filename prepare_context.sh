@@ -2,11 +2,11 @@
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 ################################################
 #imports
-. "$SCRIPT_DIR"/headers/variables.h
-. "$SCRIPT_DIR"/headers/mysql.h
-. "$SCRIPT_DIR"/headers/docker.h
-. "$SCRIPT_DIR"/headers/validate_env.h
-. "$SCRIPT_DIR"/headers/app.h
+. "$SCRIPT_DIR"/headers/variables.sh
+. "$SCRIPT_DIR"/headers/mysql.sh
+. "$SCRIPT_DIR"/headers/docker.sh
+. "$SCRIPT_DIR"/headers/validate_env.sh
+. "$SCRIPT_DIR"/headers/app.sh
 ################################################
 
 printf "Validating .env file...\n\n"

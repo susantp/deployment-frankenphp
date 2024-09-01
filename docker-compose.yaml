@@ -1,29 +1,18 @@
-services:
-  nginx:
-    image: "${PROJECT_NAME}/nginx:1.0"
-    restart: unless-stopped
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    container_name: "${PROJECT_NAME}_nginx"
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - ${APP_SRC}:/var/www
-      - ./nginx/log:/var/log/nginx
-    networks:
-      - backend
+volumes:
+  caddy_data:
+  caddy_config:
 
+services:
   app:
-    container_name: "${PROJECT_NAME}_php"
-    image: "${PROJECT_NAME}/app:0.1"
+    image: "${PROJECT_NAME}/franken-php:1.0"
     build:
-      context: ./php-fpm
+      context: ./franken-php
       dockerfile: Dockerfile
-      args:
-        PUID: ${PUID}
-        PGID: ${PGID}
+    container_name: "${PROJECT_NAME}_franken-php"
+    ports:
+      - "80:80" # HTTP
+      - "443:443" # HTTPS
+      - "443:443/udp" # HTTP/3
     restart: unless-stopped
     environment:
       PHP_MEMORY_LIMIT: "${PHP_MEMORY_LIMIT}"
@@ -32,16 +21,10 @@ services:
       COMPOSER_MEMORY_LIMIT: '-1'
     volumes:
       - ${APP_SRC}:/var/www
-#      - ./packages:/var/packages
-    ports:
-      - '9000:9000'
+      - ./franken-php/caddy_data:/data # - caddy_data:/data
+      - ./franken-php/caddy_config:/config # - caddy_config:/config
     networks:
-      backend:
-        aliases:
-          - ${PROJECT_NAME}.test
-    depends_on:
-      - mysql
-      - nginx
+      - backend
 
   mysql:
     container_name: "${PROJECT_NAME}_mysql"
